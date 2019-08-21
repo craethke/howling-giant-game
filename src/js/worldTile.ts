@@ -34,6 +34,10 @@ export default class WorldTile extends Drawable {
         return false;
     }
 
+    public isSlow(): boolean {
+        return false;
+    }
+
     public destroy(): void {
         // Do nothing
     }

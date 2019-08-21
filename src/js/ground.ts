@@ -51,4 +51,8 @@ export default class Ground extends WorldTile {
     public constructor(x: number, y: number) {
         super(Ground.images, x, y);
     }
+
+    public isSlow(): boolean {
+        return this.getImage() === Images.tumbleweed;
+    }
 }

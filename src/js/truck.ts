@@ -8,7 +8,7 @@ import App from './app';
 
 export default class Truck extends Drawable {
 
-    private static readonly MAX_HEALTH: number = 6;
+    private static readonly MAX_HEALTH: number = 3;
 
     private game: Game;
     private tilesHigh: number = 2;
@@ -42,11 +42,14 @@ export default class Truck extends Drawable {
         this.game.getWorld().getTiles().forEach(t => {
             if (this.getBoundingBox().intersects(t.getBoundingBox())) {
                 if (t.isSolid()) {
+                    this.game.getWorld().slow();
                     this.health = Math.max(0, this.health - 1);
                     t.destroy();
                 } else if (t.isHealth()) {
                     this.health = Math.min(this.health + .5, Truck.MAX_HEALTH);
                     t.destroy();
+                } else if (t.isSlow()) {
+                    this.game.getWorld().slow();
                 }
             }
         });

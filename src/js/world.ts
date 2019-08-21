@@ -8,12 +8,18 @@ import { Images } from './assets';
 import { createSecureServer } from 'http2';
 
 export default class World extends Drawable {
+
+    private static slowTime: number = 1000;
+
     public static tileSize: number = 16;
     public static tilesWide: number = 10;
     public static tilesHigh: number = 10;
 
-    private scrollSpeedPixelsPerFrame = 1;
+    private normalScrollSpeed: number = 2;
+    private slowScrollSpeed: number = 1;
     private grid: WorldTile[][] = [];
+    private state: State = State.NORMAL;
+    private stateStart: number = new Date().getTime();
 
     constructor() {
         super();
@@ -25,7 +31,12 @@ export default class World extends Drawable {
     }
 
     public update(): void {
-        this.scroll(this.scrollSpeedPixelsPerFrame);
+        this.updateState();
+        if (this.state === State.NORMAL) {
+            this.scroll(this.normalScrollSpeed);
+        } else if (this.state === State.SLOW) {
+            this.scroll(this.slowScrollSpeed);
+        }
         if (this.grid[0][0].getY() >= World.tileSize * (World.tilesHigh + 1)) {
             this.grid.shift();
             this.grid.push(this.generateLine(true));
@@ -38,6 +49,17 @@ export default class World extends Drawable {
 
     public getTiles(): WorldTile[] {
         return this.grid.reduce((acc, val) => acc.concat(val), []);
+    }
+
+    public slow(): void {
+        this.state = State.SLOW;
+        this.stateStart = new Date().getTime();
+    }
+
+    private updateState(): void {
+        if (this.state === State.SLOW && new Date().getTime() > this.stateStart + World.slowTime) {
+            this.state = State.NORMAL;
+        }
     }
 
     private generateLine(generateObstacles: boolean): WorldTile[] {
@@ -64,4 +86,8 @@ export default class World extends Drawable {
     private scroll(pixels: number): void {
         this.grid.forEach(r => r.forEach(o => o.setY(o.getY() + pixels)));
     }
+}
+
+enum State {
+    NORMAL, SLOW, PAUSED
 }
