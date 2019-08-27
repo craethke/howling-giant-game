@@ -1,4 +1,5 @@
 import WorldTile from './worldTile';
+import Animation from './animation';
 import { Images } from './assets';
 
 export default class Cactus extends WorldTile {
@@ -7,18 +8,11 @@ export default class Cactus extends WorldTile {
         [ Images.cactus, Images.cactusDead ]
     ]);
     
-    private isDestroyed: boolean = false;
-
     public constructor(x: number, y: number) {
-        super(Cactus.images, x, y);
+        super(Cactus.images, x, y, Cactus.destroyMap, new Animation(/cactus_death_anim/));
     }
 
     public isHealth(): boolean {
-        return !this.isDestroyed;
-    }
-
-    public destroy(): void {
-        this.isDestroyed = true;
-        super.setImage(Cactus.destroyMap.get(super.getImage()));
+        return !this.isDestroyed();
     }
 }

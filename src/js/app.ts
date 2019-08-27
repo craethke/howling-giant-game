@@ -38,7 +38,7 @@ export default class App {
 }
 
 window.onload = () => {
-    let app = new App(new Game());
+    let app = new App(Game.getInstance());
 
     app.setup();
 }

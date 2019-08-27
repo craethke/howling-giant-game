@@ -4,8 +4,8 @@ import WorldTile from './worldTile';
 import Ground from './ground';
 import Obstacle from './obstacle';
 import Cactus from './cactus';
+import Tumbleweed from './tumbleweed';
 import { Images } from './assets';
-import { createSecureServer } from 'http2';
 
 export default class World extends Drawable {
 
@@ -15,9 +15,10 @@ export default class World extends Drawable {
     public static tilesWide: number = 10;
     public static tilesHigh: number = 10;
 
-    private normalScrollSpeed: number = 2;
+    private normalScrollSpeed: number = 3;
     private slowScrollSpeed: number = 1;
     private grid: WorldTile[][] = [];
+    private tumbleweeds: WorldTile[] = [];
     private state: State = State.NORMAL;
     private stateStart: number = new Date().getTime();
 
@@ -40,7 +41,9 @@ export default class World extends Drawable {
         if (this.grid[0][0].getY() >= World.tileSize * (World.tilesHigh + 1)) {
             this.grid.shift();
             this.grid.push(this.generateLine(true));
+            this.generateTumbleweeds();
         }
+        this.updateTumbleweeds();
     }
 
     public render(): void {
@@ -48,12 +51,20 @@ export default class World extends Drawable {
     }
 
     public getTiles(): WorldTile[] {
-        return this.grid.reduce((acc, val) => acc.concat(val), []);
+        return this.grid.reduce((acc, val) => acc.concat(val), []).concat(this.tumbleweeds);
     }
 
     public slow(): void {
         this.state = State.SLOW;
         this.stateStart = new Date().getTime();
+    }
+
+    public pause(): void {
+        this.state = State.PAUSED;
+    }
+
+    public isPaused(): boolean {
+        return this.state === State.PAUSED;
     }
 
     private updateState(): void {
@@ -83,8 +94,23 @@ export default class World extends Drawable {
         return newLine;
     }
 
+    private generateTumbleweeds(): void {
+        let generateTumbleweed: boolean = Math.floor(Math.random() * 5) === 1;
+        if (generateTumbleweed) {
+            let newY = Math.floor(Math.random() * World.tilesHigh * 2) * World.tileSize - World.tileSize * World.tilesHigh;
+            let newX = -World.tileSize;
+            this.tumbleweeds.push(new Tumbleweed(newX, newY));
+        }
+    }
+
+    private updateTumbleweeds(): void {
+        this.tumbleweeds.forEach(t => t.update());
+        this.tumbleweeds = this.tumbleweeds.filter(t => t.getX() < World.tileSize * (World.tilesWide + 1));
+    }
+
     private scroll(pixels: number): void {
         this.grid.forEach(r => r.forEach(o => o.setY(o.getY() + pixels)));
+        this.tumbleweeds.forEach(t => t.setY(t.getY() + pixels));
     }
 }
 

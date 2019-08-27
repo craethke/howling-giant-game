@@ -10,5 +10,11 @@ html, body {
 
 canvas {
     -webkit-tap-highlight-color: transparent;
-    height: 360px;
+    width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+    canvas {
+        width: 360px;
+    }
 }

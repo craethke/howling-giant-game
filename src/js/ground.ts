@@ -44,15 +44,10 @@ export default class Ground extends WorldTile {
         Images.groundRockB,
         Images.groundRockA,
         Images.groundRockB,
-        Images.tumbleweed,
         Images.cactusDead
     ];
 
     public constructor(x: number, y: number) {
         super(Ground.images, x, y);
-    }
-
-    public isSlow(): boolean {
-        return this.getImage() === Images.tumbleweed;
     }
 }

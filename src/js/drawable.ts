@@ -4,6 +4,7 @@ export default class Drawable {
     protected ctx: CanvasRenderingContext2D;
     protected x: number = 0;
     protected y: number = 0;
+    protected z: number = 0;
 
     constructor() {
         this.canvas = <HTMLCanvasElement>document.getElementById('canvas');
@@ -20,6 +21,14 @@ export default class Drawable {
 
     public renderImage(src: CanvasImageSource, dx: number, dy: number): void {
         this.ctx.drawImage(src, dx, Math.round(dy));
+    }
+
+    public renderImageFlipped(src: HTMLImageElement, dx: number, dy: number): void {
+        this.ctx.save();
+        this.ctx.translate(dx + src.width, 0);
+        this.ctx.scale(-1, 1);
+        this.ctx.drawImage(src, 0, Math.round(dy));
+        this.ctx.restore();
     }
 
     public renderText(text: string) {
@@ -45,5 +54,9 @@ export default class Drawable {
 
     public getY() {
         return this.y;
+    }
+
+    public getZ() {
+        return this.z;
     }
 }
