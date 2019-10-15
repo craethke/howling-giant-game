@@ -8,11 +8,15 @@ module.exports = {
         filename: "bundle.js",
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
+        alias: {
+            Assets: path.resolve(__dirname, 'src/assets/')
+        }
     },
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),
         host: '0.0.0.0',
+        public: 'localhost:8080',
         disableHostCheck: true
     },
     module: {
@@ -33,7 +37,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|jpe?g|gif)$/i,
+                test: /\.(png|jpe?g|gif|mp3)$/i,
                 exclude: /node_modules/,
                 use: [
                     { loader: 'file-loader' }

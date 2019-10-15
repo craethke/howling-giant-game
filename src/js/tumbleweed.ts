@@ -23,4 +23,8 @@ export default class Tumbleweed extends WorldTile {
             this.x += Tumbleweed.pixelsPerFrame;
         }
     }
+
+    public isFlat(): boolean {
+        return false;
+    }
 }

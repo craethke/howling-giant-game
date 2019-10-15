@@ -1,18 +1,20 @@
 import Drawable from './drawable';
-import World from './world';
 import BoundingBox from './boundingBox';
 import Animation from './animation';
 import Game from './game';
+import World from './world';
 
 export default class WorldTile extends Drawable {
 
     public tilesWide: number;
     public tilesHigh: number;
     private image: HTMLImageElement;
-    private animation: Animation;
+    protected animation: Animation;
     private destroyMap: Map<HTMLImageElement, HTMLImageElement>;
     private deathAnimation: Animation;
     private destroyed: boolean = false;
+    protected xOffset: number = 0;
+    protected yOffset: number = 0;
 
     public constructor(imagesOrAnimation: any, x: number, y: number, destroyMap?: Map<HTMLImageElement, HTMLImageElement>, deathAnimation?: Animation) {
         super();
@@ -52,9 +54,9 @@ export default class WorldTile extends Drawable {
         } else {
             drawImage = this.image;
         }
-        
+
         let yImageAdjust = drawImage.height - World.tileSize;
-        super.renderImage(drawImage, this.x, this.y - yImageAdjust);
+        super.renderImage(drawImage, this.x + this.xOffset, this.y + this.yOffset - yImageAdjust);
     }
 
     public getBoundingBox(): BoundingBox {
@@ -81,6 +83,18 @@ export default class WorldTile extends Drawable {
         return this.destroyed;
     }
 
+    public isCanyonBottom(): boolean {
+        return false;
+    }
+
+    public isScore(): boolean {
+        return true;
+    }
+
+    public getScoreAmount(): number {
+        return 0;
+    }
+
     public destroy(): void {
         this.destroyed = true;
     }
@@ -91,6 +105,10 @@ export default class WorldTile extends Drawable {
 
     public setY(y: number): void {
         this.y = y;
+    }
+
+    public isFlat(): boolean {
+        return true;
     }
 
     protected getImage(): HTMLImageElement {

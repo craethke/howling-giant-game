@@ -1,3 +1,4 @@
+
 export default class BoundingBox {
 
     private x: number;
@@ -14,8 +15,13 @@ export default class BoundingBox {
 
     public intersects(other: BoundingBox): boolean {
         return this.x < other.x + other.width
-                && this.x + this.width > other.x
-                && this.y < other.y + other.height
-                && this.y + this.height > other.y;
+            && this.x + this.width > other.x
+            && this.y < other.y + other.height
+            && this.y + this.height > other.y;
+    }
+
+    public pointIntersects(otherX: number, otherY: number): boolean {
+        return otherX >= this.x && otherX <= this.x + this.width
+            && otherY >= this.y && otherY <= this.y + this.height;
     }
 }
